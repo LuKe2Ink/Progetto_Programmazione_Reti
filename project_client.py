@@ -272,9 +272,12 @@ def count_down(my_timer, nothing):
     
     thread = "Run"
     
-    if game_rounds <= TOTAL_NUMBER_OF_ROUNDS:
+    if game_rounds == 0:
+        lbl_final_result["text"] = ""
+    
+    if game_rounds < TOTAL_NUMBER_OF_ROUNDS:
         game_rounds += 1
-
+    
     lbl_game_round["text"] = "Round " + str(game_rounds) + ", time remaining: "  
     while my_timer > 0:
         my_timer = my_timer - 1
@@ -327,7 +330,7 @@ def reset():
 #FUNCTION MESSAGE TO AND FROM SERVER
 def receive_message_from_server(sck, m):
     global client_name, opponent_client_name, game_rounds
-    global client_choice, opponent_client_choice, opponent_client_score, thread1
+    global client_choice, client_score, opponent_client_choice, opponent_client_score, thread1
     while True:
         from_server = sck.recv(4096)
         
@@ -381,6 +384,7 @@ def receive_message_from_server(sck, m):
                 lbl_final_result.config(foreground = color)
 
                 enable_disable_buttons1("disable")
+                enable_disable_buttons2("disable")
                 game_rounds = 0
                 client_score = 0
                 opponent_client_score = 0
