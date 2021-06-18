@@ -382,6 +382,8 @@ def receive_message_from_server(sck, m):
 
                 enable_disable_buttons1("disable")
                 game_rounds = 0
+                client_score = 0
+                opponent_client_score = 0
                 
     sck.close()
 
