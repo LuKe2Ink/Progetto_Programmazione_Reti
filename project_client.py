@@ -2,7 +2,7 @@
 """
 Created on Sat Jun 12 14:10:32 2021
 
-@author: Zac
+@author: Andrea Zacconi, Luigi Incarnato
 """
 import tkinter as tk
 import socket
@@ -63,7 +63,6 @@ def questions_creation():
     global btn_question_1, btn_question_2, btn_question_3, player_answer
     player_answer = "false"
     random_trap = randint(1, 3)
-    
     
     if random_trap == 1:
         btn_question_1.config(command = lambda : question_choice("trap"))
@@ -238,9 +237,6 @@ def result(arg):
         player_answer = "true"
         client.send(("Game_Round" + str(game_rounds) + "incorrect").encode())
         
-
-    print (arg + " " + correct_answer)
-    #-------------------------------------------------
     enable_disable_buttons1("disable")
     
 #FUNCTION CONNECT
@@ -289,8 +285,6 @@ def count_down(my_timer, nothing):
         client.send(("Game_Round" + str(game_rounds) + "incorrect").encode())
     
     thread = "Finished"
-    #------------------
-
 
 #FUNCTION TO DISABLE THE ANSWERS BUTTONS
 def enable_disable_buttons1(todo):
@@ -316,9 +310,7 @@ def enable_disable_buttons2(todo):
         
 #FUNCTION TO RESTART THE ROUND
 def reset():
-    
-    global role
-    
+    global role 
     while(thread!="Finished"):
         sleep(1)
     
@@ -329,11 +321,10 @@ def reset():
     role = random_dictionary()
     lbl_your_role["text"] = "Your role is:" + role
     questions_creation()
-    enable_disable_buttons2("enable")
-    
+    enable_disable_buttons2("enable")  
     threading._start_new_thread(count_down, (GAME_TIMER, ""))
     
-#FUNZTION MESSAGE TO AND FROM SERVER
+#FUNCTION MESSAGE TO AND FROM SERVER
 def receive_message_from_server(sck, m):
     global client_name, opponent_client_name, game_rounds
     global client_choice, opponent_client_choice, opponent_client_score, thread1
@@ -363,30 +354,19 @@ def receive_message_from_server(sck, m):
             lbl_line_server.config(state = tk.DISABLED)
             
                 
-        elif from_server.startswith("$trapped".encode()):
-            
+        elif from_server.startswith("$trapped".encode()):           
             lbl_final_result["text"] = "You won with: " + str(client_score) + " point because your oppenent has been trapped"
 
         elif from_server.startswith("$opponent_result".encode()):
             opponent_client_choice = from_server.replace("$opponent_result".encode(), "".encode())
 
-            # capire chi vince in questo round
-            print(opponent_client_choice.decode())
             if opponent_client_choice.decode() == "correct":
                 opponent_client_score += 1
                 
             reset()
-            # Avvia il timer
-            
-            # Aggiorna GUI, DA FARE DOPO
-            #lbl_result["text"] = "Result: " + opponent_score
-
-            # E' questo l'ultimo round ad es. Round 5?
             if game_rounds == TOTAL_NUMBER_OF_ROUNDS:
-                # calcola il risultato finale
                 final_result = ""
                 color = ""
-
                 if client_score > opponent_client_score:
                     final_result = "(You Won!!!)"
                     color = "green"
@@ -403,10 +383,6 @@ def receive_message_from_server(sck, m):
                 enable_disable_buttons1("disable")
                 game_rounds = 0
                 
-
-
-
     sck.close()
-
 
 window_main.mainloop()
